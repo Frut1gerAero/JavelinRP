@@ -24,6 +24,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            position: relative;
         }
         .container {
             max-width: 900px;
@@ -95,6 +96,68 @@
             color: var(--highlight-color);
             font-weight: bold;
         }
+        /* Стили для кнопки игры */
+        .game-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--highlight-color);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transition: transform 0.2s ease;
+            z-index: 1000;
+        }
+        .game-button:hover {
+            transform: scale(1.1);
+        }
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--container-bg);
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+        #pongCanvas {
+            background-color: #000000;
+            border: 2px solid var(--highlight-color);
+            display: block;
+            margin: 0 auto;
+        }
+        #score {
+            font-size: 1.2em;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
         @media (max-width: 600px) {
             .header {
                 flex-direction: column;
@@ -109,6 +172,18 @@
             }
             h1 {
                 font-size: 1.8em;
+            }
+            .game-button {
+                width: 40px;
+                height: 40px;
+                font-size: 12px;
+            }
+            .modal-content {
+                width: 95%;
+            }
+            #pongCanvas {
+                width: 100%;
+                height: auto;
             }
         }
     </style>
@@ -128,6 +203,20 @@
         <div class="tab" onclick="window.location.href='https://t.me/javelin_rp_bot'">КУПИТЬ ДОСТУП</div>
     </div>
     <div id="wikiContent"></div>
+</div>
+
+<!-- Кнопка для открытия игры -->
+<button class="game-button" onclick="openGameModal()">PONG</button>
+
+<!-- Модальное окно с игрой PONG -->
+<div id="gameModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeGameModal()">×</span>
+        <h2>PONG</h2>
+        <p>Управляйте платформой, двигая мышь или касаясь экрана</p>
+        <div id="score">Счет: 0</div>
+        <canvas id="pongCanvas" width="600" height="400"></canvas>
+    </div>
 </div>
 
 <script>
@@ -178,8 +267,152 @@
         currentTab = tabName;
         document.getElementById("wikiContent").innerHTML = tabContent[tabName].text;
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-        event.target.classList.add("active");
+        if (event && event.target) {
+            event.target.classList.add("active");
+        } else {
+            document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add("active");
+        }
     }
+
+    // Логика для модального окна и игры PONG
+    function openGameModal() {
+        document.getElementById("gameModal").style.display = "flex";
+        startPongGame();
+    }
+
+    function closeGameModal() {
+        document.getElementById("gameModal").style.display = "none";
+        stopPongGame();
+    }
+
+    // Логика игры PONG
+    let animationFrameId;
+    const canvas = document.getElementById("pongCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Игровые параметры
+    const paddleWidth = 100;
+    const paddleHeight = 10;
+    const paddleY = canvas.height - 30;
+    let paddleX = (canvas.width - paddleWidth) / 2;
+    const ballRadius = 10;
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height / 2;
+    let ballSpeedX = 5;
+    let ballSpeedY = -5;
+    let score = 0;
+
+    // Обработка движения мыши
+    function mouseMoveHandler(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        paddleX = mouseX - paddleWidth / 2;
+        if (paddleX < 0) paddleX = 0;
+        if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+    }
+
+    // Обработка касания на мобильных устройствах
+    function touchMoveHandler(e) {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const touchX = e.touches[0].clientX - rect.left;
+        paddleX = touchX - paddleWidth / 2;
+        if (paddleX < 0) paddleX = 0;
+        if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+    }
+
+    function drawPaddle() {
+        ctx.beginPath();
+        ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
+        ctx.fillStyle = "var(--highlight-color)";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawBall() {
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function moveBall() {
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+
+        // Столкновение с боковыми стенами
+        if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
+            ballSpeedX = -ballSpeedX;
+        }
+
+        // Столкновение с верхней стеной
+        if (ballY - ballRadius < 0) {
+            ballSpeedY = -ballSpeedY;
+        }
+
+        // Столкновение с платформой
+        if (
+            ballY + ballRadius > paddleY &&
+            ballX > paddleX &&
+            ballX < paddleX + paddleWidth
+        ) {
+            ballSpeedY = -ballSpeedY;
+            score += 1; // Увеличиваем счет при отскоке
+            document.getElementById("score").textContent = `Счет: ${score}`;
+        }
+
+        // Мяч упал ниже платформы
+        if (ballY + ballRadius > canvas.height) {
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            ballSpeedX = 5;
+            ballSpeedY = -5;
+            paddleX = (canvas.width - paddleWidth) / 2;
+            score = 0; // Сбрасываем счет при проигрыше
+            document.getElementById("score").textContent = `Счет: ${score}`;
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawPaddle();
+        drawBall();
+        moveBall();
+        animationFrameId = requestAnimationFrame(draw);
+    }
+
+    function startPongGame() {
+        if (!animationFrameId) {
+            score = 0; // Сбрасываем счет при старте игры
+            document.getElementById("score").textContent = `Счет: ${score}`;
+            canvas.addEventListener("mousemove", mouseMoveHandler);
+            canvas.addEventListener("touchmove", touchMoveHandler);
+            draw();
+        }
+    }
+
+    function stopPongGame() {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ballX = canvas.width / 2;
+            ballY = canvas.height / 2;
+            paddleX = (canvas.width - paddleWidth) / 2;
+            score = 0; // Сбрасываем счет при остановке игры
+            document.getElementById("score").textContent = `Счет: ${score}`;
+            canvas.removeEventListener("mousemove", mouseMoveHandler);
+            canvas.removeEventListener("touchmove", touchMoveHandler);
+        }
+    }
+
+    // Закрытие модального окна при клике вне контента
+    window.onclick = function (event) {
+        if (event.target === document.getElementById("gameModal")) {
+            closeGameModal();
+        }
+    };
 </script>
 </body>
 </html>

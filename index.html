@@ -1,9 +1,48 @@
-<!DOCTYPE html>
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JaveWiki</title>
+    <title>Javelin RP</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <style>
         :root {
@@ -96,7 +135,6 @@
             color: var(--highlight-color);
             font-weight: bold;
         }
-        /* Стили для кнопки игры */
         .game-button {
             position: fixed;
             bottom: 20px;
@@ -117,7 +155,6 @@
         .game-button:hover {
             transform: scale(1.1);
         }
-        /* Стили для модального окна */
         .modal {
             display: none;
             position: fixed;
@@ -213,7 +250,7 @@
     <div class="modal-content">
         <span class="close-button" onclick="closeGameModal()">×</span>
         <h2>PONG</h2>
-        <p>Управляйте платформой, двигая мышь или касаясь экрана</p>
+        <p>Управляйте платформой, двигая мышь или касаясь экрана.</p>
         <div id="score">Счет: 0</div>
         <canvas id="pongCanvas" width="600" height="400"></canvas>
     </div>
@@ -319,24 +356,45 @@
     let ballSpeedX = 5;
     let ballSpeedY = -5;
     let score = 0;
+    let autoPlay = false; // Флаг для автоигры
+    let cheatCode = "";
+    const cheatCodeTarget = "909322";
+
+    // Обработка ввода чит-кода
+    document.addEventListener("keydown", (e) => {
+        if (e.key >= "0" && e.key <= "9") {
+            cheatCode += e.key;
+            if (cheatCode.length > cheatCodeTarget.length) {
+                cheatCode = cheatCode.slice(-cheatCodeTarget.length);
+            }
+            if (cheatCode === cheatCodeTarget) {
+                autoPlay = !autoPlay; // Переключаем режим автоигры
+                cheatCode = ""; // Сбрасываем код
+            }
+        }
+    });
 
     // Обработка движения мыши
     function mouseMoveHandler(e) {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        paddleX = mouseX - paddleWidth / 2;
-        if (paddleX < 0) paddleX = 0;
-        if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+        if (!autoPlay) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            paddleX = mouseX - paddleWidth / 2;
+            if (paddleX < 0) paddleX = 0;
+            if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+        }
     }
 
     // Обработка касания на мобильных устройствах
     function touchMoveHandler(e) {
-        e.preventDefault();
-        const rect = canvas.getBoundingClientRect();
-        const touchX = e.touches[0].clientX - rect.left;
-        paddleX = touchX - paddleWidth / 2;
-        if (paddleX < 0) paddleX = 0;
-        if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+        if (!autoPlay) {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const touchX = e.touches[0].clientX - rect.left;
+            paddleX = touchX - paddleWidth / 2;
+            if (paddleX < 0) paddleX = 0;
+            if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+        }
     }
 
     function drawPaddle() {
@@ -390,6 +448,13 @@
             score = 0; // Сбрасываем счет при проигрыше
             document.getElementById("score").textContent = `Счет: ${score}`;
         }
+
+        // Автоигра: платформа следует за мячом
+        if (autoPlay) {
+            paddleX = ballX - paddleWidth / 2;
+            if (paddleX < 0) paddleX = 0;
+            if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+        }
     }
 
     function draw() {
@@ -420,6 +485,8 @@
             paddleX = (canvas.width - paddleWidth) / 2;
             score = 0; // Сбрасываем счет при остановке игры
             document.getElementById("score").textContent = `Счет: ${score}`;
+            autoPlay = false; // Отключаем автоигру при закрытии
+            cheatCode = ""; // Сбрасываем чит-код
             canvas.removeEventListener("mousemove", mouseMoveHandler);
             canvas.removeEventListener("touchmove", touchMoveHandler);
         }

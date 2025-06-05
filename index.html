@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -113,23 +74,35 @@
             color: var(--tab-text);
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
             font-size: 1em;
             font-weight: bold;
             text-transform: uppercase;
+            opacity: 0.8;
         }
         .tab:hover {
             background-color: var(--tab-hover);
             transform: scale(1.05);
+            opacity: 1;
         }
         .tab.active {
             background-color: var(--tab-active);
             transform: scale(1.05);
+            opacity: 1;
         }
         #wikiContent {
             line-height: 1.8;
             font-size: 1.1em;
             white-space: pre-line;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease forwards;
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         #wikiContent span.highlight {
             color: var(--highlight-color);
@@ -194,6 +167,19 @@
             font-size: 1.2em;
             color: var(--text-color);
             margin-bottom: 10px;
+            transition: transform 0.2s ease;
+        }
+        #score.animate {
+            transform: scale(1.2);
+        }
+        @keyframes ballPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
         @media (max-width: 600px) {
             .header {
@@ -233,9 +219,9 @@
     </div>
     <div class="welcome">Добро пожаловать на вики JavelinRP</div>
     <div class="tabs">
-        <div class="tab active" onclick="showTab('countries')">СТРАНЫ</div>
-        <div class="tab" onclick="showTab('rp')">РП</div>
-        <div class="tab" onclick="showTab('admin')">АДМИНИСТРАЦИЯ</div>
+        <div class="tab active" data-tab="countries" onclick="showTab('countries')">СТРАНЫ</div>
+        <div class="tab" data-tab="rp" onclick="showTab('rp')">РП</div>
+        <div class="tab" data-tab="admin" onclick="showTab('admin')">АДМИНИСТРАЦИЯ</div>
         <div class="tab" onclick="window.location.href='https://clck.ru/3LNnmd'">ПРАВИЛА</div>
         <div class="tab" onclick="window.location.href='https://t.me/javelin_rp_bot'">КУПИТЬ ДОСТУП</div>
     </div>
@@ -256,13 +242,44 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+        return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                    row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                    headerRowIndex = 0;
+                }
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+    }
+
     let currentTab = "countries";
     const tabContent = {
         countries: {
             text: "<span class='highlight'>СТРАНЫ</span>\n" +
                   "ЦАРСТВО МИРОСЛАВИЯ\n" +
-                  "Мирославия — карликовое и островное государство, занимающее менее 100 блоков.\n" +
+                  "Мирславия — карликовое и островное государство, занимающее менее 100 блоков.\n" +
                   "Форма правления — монархия.\n" +
                   "Царь: Sherekhluk.\n" +
                   "РЕСПУБЛИКА ДЖАВЕЛИН\n" +
@@ -314,19 +331,28 @@
         }
     };
 
-    window.onload = function () {
-        showTab(currentTab);
-    };
+    document.addEventListener('DOMContentLoaded', function () {
+        const wikiContent = document.getElementById("wikiContent");
+        wikiContent.innerHTML = tabContent['countries'].text; // Устанавливаем содержимое сразу
+        wikiContent.style.animation = 'none';
+        wikiContent.offsetHeight;
+        wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        document.querySelector('.tab[data-tab="countries"]').classList.add("active");
+    });
 
     function showTab(tabName) {
+        if (currentTab === tabName) return;
         currentTab = tabName;
-        document.getElementById("wikiContent").innerHTML = tabContent[tabName].text;
+        const wikiContent = document.getElementById("wikiContent");
+        wikiContent.style.animation = 'none';
+        wikiContent.offsetHeight;
+        wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
+        wikiContent.innerHTML = tabContent[tabName].text;
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-        if (event && event.target) {
-            event.target.classList.add("active");
-        } else {
-            document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add("active");
-        }
+        const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+        if (activeTab) activeTab.classList.add("active");
+        else document.querySelector('.tab[data-tab="countries"]').classList.add("active");
     }
 
     // Логика для модального окна и игры PONG
@@ -356,9 +382,12 @@
     let ballSpeedX = 5;
     let ballSpeedY = -5;
     let score = 0;
-    let autoPlay = false; // Флаг для автоигры
-    let cheatCode = "";
+    let autoPlay = false;
     const cheatCodeTarget = "909322";
+    let cheatCode = "";
+    let ballPulse = false;
+    let ballFlash = false;
+    let paddleFlash = false;
 
     // Обработка ввода чит-кода
     document.addEventListener("keydown", (e) => {
@@ -368,8 +397,8 @@
                 cheatCode = cheatCode.slice(-cheatCodeTarget.length);
             }
             if (cheatCode === cheatCodeTarget) {
-                autoPlay = !autoPlay; // Переключаем режим автоигры
-                cheatCode = ""; // Сбрасываем код
+                autoPlay = !autoPlay;
+                cheatCode = "";
             }
         }
     });
@@ -398,19 +427,35 @@
     }
 
     function drawPaddle() {
+        ctx.save();
+        if (paddleFlash) {
+            ctx.shadowColor = "rgba(40, 167, 69, 0.8)";
+            ctx.shadowBlur = 20;
+        }
         ctx.beginPath();
         ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
-        ctx.fillStyle = "var(--highlight-color)";
+        ctx.fillStyle = paddleFlash ? "#ffffff" : "var(--highlight-color)";
         ctx.fill();
         ctx.closePath();
+        ctx.restore();
     }
 
     function drawBall() {
+        ctx.save();
+        if (ballFlash) {
+            ctx.shadowColor = "rgba(255, 255, 255, 0.8)";
+            ctx.shadowBlur = 20;
+        }
         ctx.beginPath();
         ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
         ctx.fillStyle = "#ffffff";
         ctx.fill();
+        if (ballPulse) {
+            ctx.globalAlpha = 0.8;
+            ctx.scale(1.1, 1.1);
+        }
         ctx.closePath();
+        ctx.restore();
     }
 
     function moveBall() {
@@ -420,11 +465,15 @@
         // Столкновение с боковыми стенами
         if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
             ballSpeedX = -ballSpeedX;
+            ballFlash = true;
+            setTimeout(() => ballFlash = false, 200);
         }
 
         // Столкновение с верхней стеной
         if (ballY - ballRadius < 0) {
             ballSpeedY = -ballSpeedY;
+            ballFlash = true;
+            setTimeout(() => ballFlash = false, 200);
         }
 
         // Столкновение с платформой
@@ -434,8 +483,16 @@
             ballX < paddleX + paddleWidth
         ) {
             ballSpeedY = -ballSpeedY;
-            score += 1; // Увеличиваем счет при отскоке
+            score += 1;
             document.getElementById("score").textContent = `Счет: ${score}`;
+            document.getElementById("score").classList.add("animate");
+            setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
+            ballFlash = true;
+            paddleFlash = true;
+            setTimeout(() => {
+                ballFlash = false;
+                paddleFlash = false;
+            }, 200);
         }
 
         // Мяч упал ниже платформы
@@ -445,8 +502,10 @@
             ballSpeedX = 5;
             ballSpeedY = -5;
             paddleX = (canvas.width - paddleWidth) / 2;
-            score = 0; // Сбрасываем счет при проигрыше
+            score = 0;
             document.getElementById("score").textContent = `Счет: ${score}`;
+            document.getElementById("score").classList.add("animate");
+            setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
         }
 
         // Автоигра: платформа следует за мячом
@@ -455,6 +514,9 @@
             if (paddleX < 0) paddleX = 0;
             if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
         }
+
+        // Пульсация мяча
+        ballPulse = !ballPulse;
     }
 
     function draw() {
@@ -467,7 +529,7 @@
 
     function startPongGame() {
         if (!animationFrameId) {
-            score = 0; // Сбрасываем счет при старте игры
+            score = 0;
             document.getElementById("score").textContent = `Счет: ${score}`;
             canvas.addEventListener("mousemove", mouseMoveHandler);
             canvas.addEventListener("touchmove", touchMoveHandler);
@@ -483,10 +545,13 @@
             ballX = canvas.width / 2;
             ballY = canvas.height / 2;
             paddleX = (canvas.width - paddleWidth) / 2;
-            score = 0; // Сбрасываем счет при остановке игры
+            score = 0;
             document.getElementById("score").textContent = `Счет: ${score}`;
-            autoPlay = false; // Отключаем автоигру при закрытии
-            cheatCode = ""; // Сбрасываем чит-код
+            autoPlay = false;
+            cheatCode = "";
+            ballPulse = false;
+            ballFlash = false;
+            paddleFlash = false;
             canvas.removeEventListener("mousemove", mouseMoveHandler);
             canvas.removeEventListener("touchmove", touchMoveHandler);
         }

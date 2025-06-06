@@ -333,7 +333,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         const wikiContent = document.getElementById("wikiContent");
-        wikiContent.innerHTML = tabContent['countries'].text; // Устанавливаем содержимое сразу
+        wikiContent.innerHTML = tabContent['countries'].text;
         wikiContent.style.animation = 'none';
         wikiContent.offsetHeight;
         wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
@@ -428,13 +428,16 @@
 
     function drawPaddle() {
         ctx.save();
-        if (paddleFlash) {
-            ctx.shadowColor = "rgba(40, 167, 69, 0.8)";
-            ctx.shadowBlur = 20;
-        }
         ctx.beginPath();
         ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
-        ctx.fillStyle = paddleFlash ? "#ffffff" : "var(--highlight-color)";
+        ctx.fillStyle = "#ffffff"; // Платформа всегда белая
+        if (paddleFlash) {
+            ctx.shadowColor = "rgba(40, 167, 69, 0.8)"; // Зелёная тень при столкновении
+            ctx.shadowBlur = 20;
+        } else {
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur = 0;
+        }
         ctx.fill();
         ctx.closePath();
         ctx.restore();
@@ -442,18 +445,18 @@
 
     function drawBall() {
         ctx.save();
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
         if (ballFlash) {
             ctx.shadowColor = "rgba(255, 255, 255, 0.8)";
             ctx.shadowBlur = 20;
         }
-        ctx.beginPath();
-        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
         if (ballPulse) {
             ctx.globalAlpha = 0.8;
             ctx.scale(1.1, 1.1);
         }
+        ctx.fill();
         ctx.closePath();
         ctx.restore();
     }
@@ -540,8 +543,8 @@
     function stopPongGame() {
         if (animationFrameId) {
             cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            animationFrameId = null;
             ballX = canvas.width / 2;
             ballY = canvas.height / 2;
             paddleX = (canvas.width - paddleWidth) / 2;
@@ -566,3 +569,4 @@
 </script>
 </body>
 </html>
+</xai>

@@ -90,6 +90,13 @@
             transform: scale(1.05);
             opacity: 1;
         }
+        .tab a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
         #wikiContent {
             line-height: 1.8;
             font-size: 1.1em;
@@ -215,15 +222,14 @@
 <div class="container">
     <div class="header">
         <h1>JAVELIN RP</h1>
-        <img src="images/javelin_logo_ru.png" alt="Javelin RP Logo" class="soldier-img">
+        <img src="images/javelin-logo.png" alt="Javelin RP Logo" class="soldier-img">
     </div>
     <div class="welcome">Добро пожаловать на вики JavelinRP</div>
     <div class="tabs">
-        <div class="tab active" data-tab="countries" onclick="showTab('countries')">СТРАНЫ</div>
-        <div class="tab" data-tab="rp" onclick="showTab('rp')">РП</div>
-        <div class="tab" data-tab="admin" onclick="showTab('admin')">АДМИНИСТРАЦИЯ</div>
-        <div class="tab" onclick="window.location.href='https://clck.ru/3LNnmd'">ПРАВИЛА</div>
-        <div class="tab" onclick="window.location.href='https://t.me/javelin_rp_bot'">КУПИТЬ ДОСТУП</div>
+        <div class="tab active" data-tab="main" onclick="showTab('main')">ОСНОВНОЕ</div>
+        <div class="tab" onclick="window.open('https://www.donationalerts.com/r/javelinrp', '_blank')">
+            <a href="https://www.donationalerts.com/r/javelinrp" target="_blank">ДОНАТ</a>
+        </div>
     </div>
     <div id="wikiContent"></div>
 </div>
@@ -243,116 +249,39 @@
 </div>
 
 <script type="text/javascript">
-    var gk_isXlsx = false;
-    var gk_xlsxFileLookup = {};
-    var gk_fileData = {};
-    function filledCell(cell) {
-        return cell !== '' && cell != null;
-    }
-    function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                    row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                    headerRowIndex = 0;
-                }
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-    }
-
-    let currentTab = "countries";
+    let currentTab = "main";
     const tabContent = {
-        countries: {
-            text: "<span class='highlight'>СТРАНЫ</span>\n" +
-                  "ЦАРСТВО МИРОСЛАВИЯ\n" +
-                  "Мирославия — карликовое и островное государство, занимающее менее 100 блоков.\n" +
-                  "Форма правления — монархия.\n" +
-                  "Царь: Sherekhluk.\n" +
-                  "РЕСПУБЛИКА ДЖАВЕЛИН\n" +
-                  "Джавелин — большая и богатая страна с высокой опасностью и сильной экономикой.\n" +
-                  "Форма правления — президентская республика.\n" +
-                  "Президент: Алексей Михалович Смирнов."
-        },
-        rp: {
-            text: "<span class='highlight'>РП</span>\n" +
-                  "/roll 🎲\n" +
-                  "Бросок кубика для случайного числа (обычно 1–100). Используется для решения спорных ситуаций или рандома в ролевых действиях.\n" +
-                  "Пример:\n" +
-                  "/roll\n" +
-                  "Результат: 67\n\n" +
-                  "/me 🎭\n" +
-                  "Описывает действие вашего персонажа в третьем лице. Видят все рядом стоящие игроки.\n" +
-                  "Пример:\n" +
-                  "/me достал из кармана ключи и начал открывать дверь\n" +
-                  "В чате: Игрок достал из кармана ключи и начал открывать дверь\n\n" +
-                  "/try 🤞\n" +
-                  "Пытается выполнить действие с шансом успеха или неудачи. Обычно после команды кидается /roll.\n" +
-                  "Пример:\n" +
-                  "/try вскрыть замок отмычкой\n" +
-                  "В чате: Игрок пытается вскрыть замок отмычкой\n" +
-                  "Затем /roll — если выпало больше 50, действие удалось.\n\n" +
-                  "/ooc 🌐\n" +
-                  "Сообщение вне ролеплея (Out of Character) — видят все игроки на сервере. Используется для вопросов, объявлений, обсуждений вне игры.\n" +
-                  "Пример:\n" +
-                  "/ooc Как продать дом?\n\n" +
-                  "/looc 💬\n" +
-                  "Локальный OOC — сообщение вне ролеплея, но видно только рядом стоящим игрокам.\n" +
-                  "Пример:\n" +
-                  "/looc подвинься пожалуйста"
-        },
-        admin: {
-            text: "<span class='highlight'>АДМИНИСТРАЦИЯ</span>\n" +
-                  "Администраторы имеют право:\n" +
-                  "- Блокировать нарушителей\n" +
-                  "- Выдавать временные наказания\n" +
-                  "- Присутствовать в роли наблюдателя в РП\n" +
-                  "- Управлять базой правил\n" +
-                  "- Вести журнал изменений и наказаний\n" +
-                  "⚠️ Запрещено:\n" +
-                  "- Вмешиваться в RP напрямую\n" +
-                  "- Выдавать преимущество одному игроку\n" +
-                  "- Изменять правила без согласования\n" +
-                  "- Использовать команды в корыстных целях\n" +
-                  "📌 Жалобы принимаются только через официальные формы внутри игры или в специальных каналах Discord."
+        main: {
+            text: "<span class='highlight'>ОСНОВНОЕ</span>\n" +
+                  "сейчас работа над Javelin RP идет, вы можете помочь нам во вкладке <span class='highlight'>Донат</span>"
         }
     };
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function initContent() {
         const wikiContent = document.getElementById("wikiContent");
-        wikiContent.innerHTML = tabContent['countries'].text;
+        wikiContent.innerHTML = tabContent['main'].text;
         wikiContent.style.animation = 'none';
-        wikiContent.offsetHeight;
+        wikiContent.offsetHeight; // Trigger reflow
         wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-        document.querySelector('.tab[data-tab="countries"]').classList.add("active");
-    });
+        document.querySelector('.tab[data-tab="main"]').classList.add("active");
+    }
+
+    document.addEventListener('DOMContentLoaded', initContent);
+    initContent(); // Fallback in case DOMContentLoaded doesn't fire
 
     function showTab(tabName) {
         if (currentTab === tabName) return;
         currentTab = tabName;
         const wikiContent = document.getElementById("wikiContent");
-        wikiContent.style.animation = 'none';
-        wikiContent.offsetHeight;
-        wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
         wikiContent.innerHTML = tabContent[tabName].text;
+        wikiContent.style.animation = 'none';
+        wikiContent.offsetHeight; // Trigger reflow
+        wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
         const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
         if (activeTab) activeTab.classList.add("active");
-        else document.querySelector('.tab[data-tab="countries"]').classList.add("active");
+        else document.querySelector('.tab[data-tab="main"]').classList.add("active");
     }
 
     // Логика для модального окна и игры PONG
@@ -430,9 +359,9 @@
         ctx.save();
         ctx.beginPath();
         ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#ffffff"; // Платформа всегда белая
+        ctx.fillStyle = "#ffffff";
         if (paddleFlash) {
-            ctx.shadowColor = "rgba(40, 167, 69, 0.8)"; // Зелёная тень при столкновении
+            ctx.shadowColor = "rgba(40, 167, 69, 0.8)";
             ctx.shadowBlur = 20;
         } else {
             ctx.shadowColor = "transparent";
@@ -486,7 +415,7 @@
             ballX < paddleX + paddleWidth
         ) {
             ballSpeedY = -ballSpeedY;
-            score += 1;
+            score++;
             document.getElementById("score").textContent = `Счет: ${score}`;
             document.getElementById("score").classList.add("animate");
             setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
@@ -561,7 +490,7 @@
     }
 
     // Закрытие модального окна при клике вне контента
-    window.onclick = function (event) {
+    window.onclick = function(event) {
         if (event.target === document.getElementById("gameModal")) {
             closeGameModal();
         }
@@ -569,4 +498,3 @@
 </script>
 </body>
 </html>
-</xai>

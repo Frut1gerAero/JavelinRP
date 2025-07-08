@@ -6,19 +6,78 @@
     <title>Javelin RP</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Добавленный рекламный скрипт Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3474202328777362"
+     crossorigin="anonymous"></script>
     <style>
         :root {
             --bg-color: #121212;
             --text-color: #ffffff;
             --highlight-color: #4CAF50;
-            --accent-color: #ffffff;
+            --accent-color: #FF5722;
             --container-bg: #1E1E1E;
             --tab-bg: #333333;
             --tab-hover: #4CAF50;
-            --tab-active: #ffffff;
+            --tab-active: #FF5722;
             --tab-text: #ffffff;
             --shadow-color: rgba(0, 0, 0, 0.3);
             --glow-color: rgba(76, 175, 80, 0.7);
+        }
+        
+        /* Анимация загрузки */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loader-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        .loader-bar {
+            width: 300px;
+            height: 4px;
+            background-color: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loader-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background-color: var(--highlight-color);
+            transition: width 0.3s ease;
+        }
+        
+        .loader-text {
+            margin-top: 20px;
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
         }
         
         body {
@@ -29,8 +88,13 @@
             color: var(--text-color);
             line-height: 1.6;
             position: relative;
-            opacity: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
             overflow-x: hidden;
+        }
+        
+        body.loaded {
+            opacity: 1;
         }
         
         .container {
@@ -40,7 +104,15 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 10px 30px var(--shadow-color);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body.loaded .container {
+            transform: translateY(0);
+            opacity: 1;
         }
         
         .header {
@@ -82,7 +154,6 @@
             object-fit: contain;
             filter: drop-shadow(0 0 10px var(--glow-color));
             transition: transform 0.3s ease;
-            cursor: pointer;
         }
         
         .soldier-img:hover {
@@ -153,7 +224,6 @@
         
         .tab.active {
             background-color: var(--tab-active);
-            color: #121212;
             transform: translateY(-3px);
             box-shadow: 0 6px 12px var(--shadow-color);
         }
@@ -170,11 +240,21 @@
             line-height: 1.8;
             font-size: 1.1em;
             white-space: pre-line;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease forwards 0.3s;
             min-height: 300px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
             border-left: 3px solid var(--accent-color);
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         #wikiContent span.highlight {
@@ -300,11 +380,6 @@
             font-style: italic;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        
         @media (max-width: 768px) {
             .container {
                 margin: 20px;
@@ -348,13 +423,20 @@
     </style>
 </head>
 <body>
+<!-- Анимация загрузки -->
+<div class="loader">
+    <img src="images/javelin-logo.png" alt="Javelin RP" class="loader-logo">
+    <div class="loader-bar">
+        <div class="loader-progress"></div>
+    </div>
+    <div class="loader-text">Загрузка...</div>
+</div>
+
 <!-- Основной контент -->
 <div class="container">
     <div class="header">
         <h1>JAVELIN RP</h1>
-        <a href="https://linktr.ee/JavelinRP" target="_blank">
-            <img src="images/javelin-logo.png" alt="Javelin RP Logo" class="soldier-img">
-        </a>
+        <img src="images/javelin-logo.png" alt="Javelin RP Logo" class="soldier-img">
     </div>
     <div class="welcome">Добро пожаловать на вики-страницу проекта Javelin RP</div>
     <div class="tabs">
@@ -382,6 +464,29 @@
 </div>
 
 <script type="text/javascript">
+    // Имитация загрузки
+    const loader = document.querySelector('.loader');
+    const loaderProgress = document.querySelector('.loader-progress');
+    const body = document.body;
+    
+    let progress = 0;
+    const loadingInterval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress > 100) progress = 100;
+        loaderProgress.style.width = `${progress}%`;
+        
+        if (progress === 100) {
+            clearInterval(loadingInterval);
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    body.classList.add('loaded');
+                }, 500);
+            }, 500);
+        }
+    }, 200);
+    
     // Содержимое вкладок
     let currentTab = "main";
     const tabContent = {

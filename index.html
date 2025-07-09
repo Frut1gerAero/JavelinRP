@@ -5,229 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javelin RP</title>
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Добавленный рекламный скрипт Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3474202328777362"
-     crossorigin="anonymous"></script>
     <style>
         :root {
-            --bg-color: #121212;
+            --bg-color: #1a1a1a;
             --text-color: #ffffff;
-            --highlight-color: #4CAF50;
-            --accent-color: #FF5722;
-            --container-bg: #1E1E1E;
-            --tab-bg: #333333;
-            --tab-hover: #4CAF50;
-            --tab-active: #FF5722;
-            --tab-text: #ffffff;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --glow-color: rgba(76, 175, 80, 0.7);
+            --highlight-color: #28a745;
+            --container-bg: #2a2a2a;
+            --tab-bg: #ffffff;
+            --tab-hover: #e0e0e0;
+            --tab-active: #cccccc;
+            --tab-text: #000000;
+            --shadow-color: rgba(0, 0, 0, 0.5);
         }
-        
-        /* Анимация загрузки */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-        
-        .loader-logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
-            animation: pulse 2s infinite ease-in-out;
-        }
-        
-        .loader-bar {
-            width: 300px;
-            height: 4px;
-            background-color: #333;
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .loader-progress {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0%;
-            background-color: var(--highlight-color);
-            transition: width 0.3s ease;
-        }
-        
-        .loader-text {
-            margin-top: 20px;
-            color: var(--text-color);
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 14px;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        
         body {
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             position: relative;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            overflow-x: hidden;
         }
-        
-        body.loaded {
-            opacity: 1;
-        }
-        
         .container {
-            max-width: 1000px;
-            margin: 40px auto;
+            max-width: 900px;
+            margin: auto;
             background: var(--container-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px var(--shadow-color);
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-color);
         }
-        
-        body.loaded .container {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 30px;
-            position: relative;
+            margin-bottom: 20px;
         }
-        
         h1 {
-            font-size: 3em;
+            font-size: 2.5em;
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(90deg, var(--highlight-color), var(--accent-color));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 10px var(--glow-color);
-            position: relative;
+            letter-spacing: 2px;
         }
-        
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--highlight-color), var(--accent-color));
-            border-radius: 2px;
-        }
-        
         .soldier-img {
-            width: 120px;
+            width: 100px;
             height: auto;
             object-fit: contain;
-            filter: drop-shadow(0 0 10px var(--glow-color));
-            transition: transform 0.3s ease;
         }
-        
-        .soldier-img:hover {
-            transform: rotate(5deg) scale(1.1);
-        }
-        
         .welcome {
             text-align: center;
-            font-size: 1.2em;
-            margin-bottom: 40px;
+            font-size: 1.1em;
+            margin-bottom: 30px;
             color: #cccccc;
             font-style: italic;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            border-left: 3px solid var(--highlight-color);
         }
-        
         .tabs {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             justify-content: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
-        
         .tab {
             flex: 1 1 auto;
-            min-width: 150px;
-            padding: 15px 20px;
+            max-width: 150px;
+            padding: 12px;
             text-align: center;
             background-color: var(--tab-bg);
             color: var(--tab-text);
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
             font-size: 1em;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border: none;
-            outline: none;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 6px var(--shadow-color);
+            opacity: 0.8;
         }
-        
-        .tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        
         .tab:hover {
             background-color: var(--tab-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px var(--shadow-color);
+            transform: scale(1.05);
+            opacity: 1;
         }
-        
-        .tab:hover::before {
-            left: 100%;
-        }
-        
         .tab.active {
             background-color: var(--tab-active);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px var(--shadow-color);
+            transform: scale(1.05);
+            opacity: 1;
         }
-        
         .tab a {
             color: inherit;
             text-decoration: none;
@@ -235,61 +97,44 @@
             width: 100%;
             height: 100%;
         }
-        
         #wikiContent {
             line-height: 1.8;
             font-size: 1.1em;
             white-space: pre-line;
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeIn 0.5s ease forwards 0.3s;
-            min-height: 300px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            border-left: 3px solid var(--accent-color);
+            animation: fadeIn 0.5s ease forwards;
         }
-        
         @keyframes fadeIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-        
         #wikiContent span.highlight {
             color: var(--highlight-color);
             font-weight: bold;
-            text-shadow: 0 0 5px var(--glow-color);
         }
-        
         .game-button {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--highlight-color), var(--accent-color));
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--highlight-color);
             border-radius: 50%;
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 6px 15px var(--shadow-color);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            transition: transform 0.2s ease;
             z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: pulse 2s infinite;
         }
-        
         .game-button:hover {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 8px 20px var(--shadow-color);
+            transform: scale(1.1);
         }
-        
         .modal {
             display: none;
             position: fixed;
@@ -297,124 +142,75 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 1001;
             justify-content: center;
             align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
-        
-        .modal.show {
-            display: flex;
-            opacity: 1;
-        }
-        
         .modal-content {
             background-color: var(--container-bg);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 20px;
+            border-radius: 10px;
             position: relative;
-            max-width: 700px;
+            max-width: 600px;
             width: 90%;
             text-align: center;
-            transform: scale(0.9);
-            opacity: 0;
-            transition: all 0.3s ease;
-            border: 1px solid var(--highlight-color);
-            box-shadow: 0 0 30px var(--glow-color);
         }
-        
-        .modal.show .modal-content {
-            transform: scale(1);
-            opacity: 1;
-        }
-        
         .close-button {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 28px;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
             color: var(--text-color);
             cursor: pointer;
-            transition: color 0.3s ease;
         }
-        
-        .close-button:hover {
-            color: var(--accent-color);
-        }
-        
         #pongCanvas {
             background-color: #000000;
             border: 2px solid var(--highlight-color);
             display: block;
-            margin: 20px auto;
-            box-shadow: 0 0 20px var(--glow-color);
+            margin: 0 auto;
         }
-        
         #score {
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: var(--text-color);
-            margin-bottom: 15px;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px var(--glow-color);
+            margin-bottom: 10px;
+            transition: transform 0.2s ease;
         }
-        
         #score.animate {
             transform: scale(1.2);
-            color: var(--highlight-color);
         }
-        
-        .game-instructions {
-            margin-bottom: 20px;
-            color: #cccccc;
-            font-size: 0.9em;
+        @keyframes ballPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
-        
-        .cheat-code {
-            margin-top: 15px;
-            font-size: 0.8em;
-            color: #777;
-            font-style: italic;
+        @keyframes flash {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                margin: 20px;
-                padding: 20px;
-            }
-            
+        @media (max-width: 600px) {
             .header {
                 flex-direction: column;
                 text-align: center;
             }
-            
-            h1 {
-                font-size: 2em;
-                margin-bottom: 15px;
-            }
-            
             .soldier-img {
-                width: 100px;
-                margin-top: 15px;
+                margin-top: 10px;
+                width: 150px;
             }
-            
             .tab {
-                min-width: 120px;
-                padding: 12px 15px;
-                font-size: 0.9em;
+                max-width: 100%;
             }
-            
+            h1 {
+                font-size: 1.8em;
+            }
             .game-button {
-                width: 50px;
-                height: 50px;
-                font-size: 14px;
-                bottom: 20px;
-                right: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 12px;
             }
-            
+            .modal-content {
+                width: 95%;
+            }
             #pongCanvas {
                 width: 100%;
                 height: auto;
@@ -423,22 +219,12 @@
     </style>
 </head>
 <body>
-<!-- Анимация загрузки -->
-<div class="loader">
-    <img src="images/javelin-logo.png" alt="Javelin RP" class="loader-logo">
-    <div class="loader-bar">
-        <div class="loader-progress"></div>
-    </div>
-    <div class="loader-text">Загрузка...</div>
-</div>
-
-<!-- Основной контент -->
 <div class="container">
     <div class="header">
         <h1>JAVELIN RP</h1>
         <img src="images/javelin-logo.png" alt="Javelin RP Logo" class="soldier-img">
     </div>
-    <div class="welcome">Добро пожаловать на вики-страницу проекта Javelin RP</div>
+    <div class="welcome">Добро пожаловать на вики JavelinRP</div>
     <div class="tabs">
         <div class="tab active" data-tab="main" onclick="showTab('main')">ОСНОВНОЕ</div>
         <div class="tab" onclick="window.open('https://www.donationalerts.com/r/javelinrp', '_blank')">
@@ -455,95 +241,58 @@
 <div id="gameModal" class="modal">
     <div class="modal-content">
         <span class="close-button" onclick="closeGameModal()">×</span>
-        <h2>JAVELIN PONG</h2>
-        <p class="game-instructions">Управляйте платформой, двигая мышь или касаясь экрана</p>
+        <h2>PONG</h2>
+        <p>Управляйте платформой, двигая мышь или касаясь экрана.</p>
         <div id="score">Счет: 0</div>
         <canvas id="pongCanvas" width="600" height="400"></canvas>
-        <p class="cheat-code">Введите секретный код для активации автоигры</p>
     </div>
 </div>
 
 <script type="text/javascript">
-    // Имитация загрузки
-    const loader = document.querySelector('.loader');
-    const loaderProgress = document.querySelector('.loader-progress');
-    const body = document.body;
-    
-    let progress = 0;
-    const loadingInterval = setInterval(() => {
-        progress += Math.random() * 10;
-        if (progress > 100) progress = 100;
-        loaderProgress.style.width = `${progress}%`;
-        
-        if (progress === 100) {
-            clearInterval(loadingInterval);
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    body.classList.add('loaded');
-                }, 500);
-            }, 500);
-        }
-    }, 200);
-    
-    // Содержимое вкладок
     let currentTab = "main";
     const tabContent = {
         main: {
-            text: `<span class='highlight'>ОСНОВНАЯ ИНФОРМАЦИЯ</span>\n\n` +
-                  `Добро пожаловать на официальный сайт проекта Javelin RP.\n\n` +
-                  `<span class='highlight'>Текущий статус:</span> проект находится в активной разработке.\n\n` +
-                  `Вы можете поддержать развитие проекта через систему <span class='highlight'>донатов</span>.`
+            text: "<span class='highlight'>ОСНОВНОЕ</span>\n" +
+                  "сейчас работа над Javelin RP идет, вы можете помочь нам во вкладке <span class='highlight'>Донат</span>"
         }
     };
 
-    // Инициализация контента
     function initContent() {
         const wikiContent = document.getElementById("wikiContent");
-        wikiContent.innerHTML = tabContent[currentTab].text;
+        wikiContent.innerHTML = tabContent['main'].text;
+        wikiContent.style.animation = 'none';
+        wikiContent.offsetHeight; // Trigger reflow
+        wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
         document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-        document.querySelector(`.tab[data-tab="${currentTab}"]`).classList.add("active");
+        document.querySelector('.tab[data-tab="main"]').classList.add("active");
     }
 
-    // Переключение вкладок
+    document.addEventListener('DOMContentLoaded', initContent);
+    initContent(); // Fallback in case DOMContentLoaded doesn't fire
+
     function showTab(tabName) {
         if (currentTab === tabName) return;
         currentTab = tabName;
         const wikiContent = document.getElementById("wikiContent");
-        
-        // Анимация исчезновения
-        wikiContent.style.opacity = '0';
-        wikiContent.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            wikiContent.innerHTML = tabContent[tabName].text;
-            // Анимация появления
-            wikiContent.style.opacity = '1';
-            wikiContent.style.transform = 'translateY(0)';
-            
-            document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-            const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-            if (activeTab) activeTab.classList.add("active");
-        }, 300);
+        wikiContent.innerHTML = tabContent[tabName].text;
+        wikiContent.style.animation = 'none';
+        wikiContent.offsetHeight; // Trigger reflow
+        wikiContent.style.animation = 'fadeIn 0.5s ease forwards';
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+        const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+        if (activeTab) activeTab.classList.add("active");
+        else document.querySelector('.tab[data-tab="main"]').classList.add("active");
     }
 
-    // Логика модального окна игры
+    // Логика для модального окна и игры PONG
     function openGameModal() {
-        const modal = document.getElementById("gameModal");
-        modal.classList.add("show");
+        document.getElementById("gameModal").style.display = "flex";
         startPongGame();
-        document.body.style.overflow = 'hidden';
     }
 
     function closeGameModal() {
-        const modal = document.getElementById("gameModal");
-        modal.classList.remove("show");
-        setTimeout(() => {
-            modal.style.display = "none";
-        }, 300);
+        document.getElementById("gameModal").style.display = "none";
         stopPongGame();
-        document.body.style.overflow = '';
     }
 
     // Логика игры PONG
@@ -553,7 +302,7 @@
 
     // Игровые параметры
     const paddleWidth = 100;
-    const paddleHeight = 12;
+    const paddleHeight = 10;
     const paddleY = canvas.height - 30;
     let paddleX = (canvas.width - paddleWidth) / 2;
     const ballRadius = 10;
@@ -568,7 +317,6 @@
     let ballPulse = false;
     let ballFlash = false;
     let paddleFlash = false;
-    let gameStarted = false;
 
     // Обработка ввода чит-кода
     document.addEventListener("keydown", (e) => {
@@ -613,7 +361,7 @@
         ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
         ctx.fillStyle = "#ffffff";
         if (paddleFlash) {
-            ctx.shadowColor = "rgba(76, 175, 80, 0.8)";
+            ctx.shadowColor = "rgba(40, 167, 69, 0.8)";
             ctx.shadowBlur = 20;
         } else {
             ctx.shadowColor = "transparent";
@@ -635,6 +383,7 @@
         }
         if (ballPulse) {
             ctx.globalAlpha = 0.8;
+            ctx.scale(1.1, 1.1);
         }
         ctx.fill();
         ctx.closePath();
@@ -746,9 +495,6 @@
             closeGameModal();
         }
     };
-
-    // Инициализация при загрузке
-    document.addEventListener('DOMContentLoaded', initContent);
 </script>
 </body>
 </html>

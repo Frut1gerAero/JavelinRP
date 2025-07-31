@@ -20,7 +20,56 @@
             --shadow-color: rgba(0, 0, 0, 0.3);
             --glow-color: rgba(76, 175, 80, 0.7);
         }
-        
+
+        /* Стили для UK предупреждения */
+        #uk-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #uk-warning img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+        }
+
+        .warning-text {
+            font-size: 1.3em;
+            margin: 10px 0;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .warning-text:first-of-type {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .warning-text:last-of-type {
+            color: #f8a5a5;
+            font-style: italic;
+        }
+
+        body.uk-detected {
+            overflow: hidden;
+        }
+
+        /* Остальные стили */
         body {
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
@@ -29,10 +78,9 @@
             color: var(--text-color);
             line-height: 1.6;
             position: relative;
-            opacity: 1;
             overflow-x: hidden;
         }
-        
+
         .container {
             max-width: 1000px;
             margin: 40px auto;
@@ -42,7 +90,7 @@
             box-shadow: 0 10px 30px var(--shadow-color);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .header {
             display: flex;
             align-items: center;
@@ -50,7 +98,7 @@
             margin-bottom: 30px;
             position: relative;
         }
-        
+
         h1 {
             font-size: 3em;
             margin: 0;
@@ -64,7 +112,7 @@
             text-shadow: 0 0 10px var(--glow-color);
             position: relative;
         }
-        
+
         h1::after {
             content: '';
             position: absolute;
@@ -75,7 +123,7 @@
             background: linear-gradient(90deg, var(--highlight-color), var(--accent-color));
             border-radius: 2px;
         }
-        
+
         .soldier-img {
             width: 120px;
             height: auto;
@@ -84,11 +132,11 @@
             transition: transform 0.3s ease;
             cursor: pointer;
         }
-        
+
         .soldier-img:hover {
             transform: rotate(5deg) scale(1.1);
         }
-        
+
         .welcome {
             text-align: center;
             font-size: 1.2em;
@@ -100,7 +148,7 @@
             border-radius: 10px;
             border-left: 3px solid var(--highlight-color);
         }
-        
+
         .tabs {
             display: flex;
             flex-wrap: wrap;
@@ -108,7 +156,7 @@
             justify-content: center;
             margin-bottom: 40px;
         }
-        
+
         .tab {
             flex: 1 1 auto;
             min-width: 150px;
@@ -129,7 +177,7 @@
             overflow: hidden;
             box-shadow: 0 4px 6px var(--shadow-color);
         }
-        
+
         .tab::before {
             content: '';
             position: absolute;
@@ -140,24 +188,24 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transition: 0.5s;
         }
-        
+
         .tab:hover {
             background-color: var(--tab-hover);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px var(--shadow-color);
         }
-        
+
         .tab:hover::before {
             left: 100%;
         }
-        
+
         .tab.active {
             background-color: var(--tab-active);
             color: #121212;
             transform: translateY(-3px);
             box-shadow: 0 6px 12px var(--shadow-color);
         }
-        
+
         .tab a {
             color: inherit;
             text-decoration: none;
@@ -165,7 +213,7 @@
             width: 100%;
             height: 100%;
         }
-        
+
         #wikiContent {
             line-height: 1.8;
             font-size: 1.1em;
@@ -176,13 +224,13 @@
             border-radius: 10px;
             border-left: 3px solid var(--accent-color);
         }
-        
+
         #wikiContent span.highlight {
             color: var(--highlight-color);
             font-weight: bold;
             text-shadow: 0 0 5px var(--glow-color);
         }
-        
+
         .game-button {
             position: fixed;
             bottom: 30px;
@@ -204,12 +252,12 @@
             align-items: center;
             animation: pulse 2s infinite;
         }
-        
+
         .game-button:hover {
             transform: scale(1.1) rotate(10deg);
             box-shadow: 0 8px 20px var(--shadow-color);
         }
-        
+
         .modal {
             display: none;
             position: fixed;
@@ -224,12 +272,12 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        
+
         .modal.show {
             display: flex;
             opacity: 1;
         }
-        
+
         .modal-content {
             background-color: var(--container-bg);
             padding: 30px;
@@ -244,12 +292,12 @@
             border: 1px solid var(--highlight-color);
             box-shadow: 0 0 30px var(--glow-color);
         }
-        
+
         .modal.show .modal-content {
             transform: scale(1);
             opacity: 1;
         }
-        
+
         .close-button {
             position: absolute;
             top: 15px;
@@ -259,11 +307,11 @@
             cursor: pointer;
             transition: color 0.3s ease;
         }
-        
+
         .close-button:hover {
             color: var(--accent-color);
         }
-        
+
         #pongCanvas {
             background-color: #000000;
             border: 2px solid var(--highlight-color);
@@ -271,7 +319,7 @@
             margin: 20px auto;
             box-shadow: 0 0 20px var(--glow-color);
         }
-        
+
         #score {
             font-size: 1.5em;
             color: var(--text-color);
@@ -281,30 +329,30 @@
             transition: all 0.3s ease;
             text-shadow: 0 0 5px var(--glow-color);
         }
-        
+
         #score.animate {
             transform: scale(1.2);
             color: var(--highlight-color);
         }
-        
+
         .game-instructions {
             margin-bottom: 20px;
             color: #cccccc;
             font-size: 0.9em;
         }
-        
+
         .cheat-code {
             margin-top: 15px;
             font-size: 0.8em;
             color: #777;
             font-style: italic;
         }
-        
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.05); opacity: 0.8; }
         }
-        
+
         @media (max-width: 768px) {
             .container {
                 margin: 20px;
@@ -344,306 +392,344 @@
                 width: 100%;
                 height: auto;
             }
+
+            #uk-warning img {
+                width: 80px;
+            }
+
+            .warning-text {
+                font-size: 1em;
+                padding: 0 15px;
+            }
         }
     </style>
 </head>
 <body>
-<!-- Основной контент -->
-<div class="container">
-    <div class="header">
-        <h1>JAVELIN RP</h1>
-        <a href="https://linktr.ee/JavelinRP" target="_blank">
-            <img src="images/javelin-logo.png" alt="Javelin RP Logo" class="soldier-img">
-        </a>
+    <!-- Блок для UK предупреждения -->
+    <div id="uk-warning">
+        <img src="images/uk.png" alt="UK Flag">
+        <p class="warning-text">
+            Простите, сервер Javelin RP трактуется как небезопасный для детей британскими законами. 
+            Денег на ввод паспорта у нас нет, сорри. 😢
+        </p>
+        <p class="warning-text">
+            Sorry, the Javelin RP server is classified as not child-safe under British laws. 
+            We don't have funds for passport verification, sorry. 😢
+        </p>
     </div>
-    <div class="welcome">Добро пожаловать на вики-страницу проекта Javelin RP</div>
-    <div class="tabs">
-        <div class="tab active" data-tab="main" onclick="showTab('main')">ОСНОВНОЕ</div>
-        <div class="tab" onclick="window.open('https://www.donationalerts.com/r/javelinrp', '_blank')">
-            <a href="https://www.donationalerts.com/r/javelinrp" target="_blank">ДОНАТ</a>
+
+    <!-- Основной контент -->
+    <div class="container">
+        <div class="header">
+            <h1>JAVELIN RP</h1>
+            <a href="https://linktr.ee/JavelinRP" target="_blank">
+                <img src="images/javelin-logo.png" alt="Javelin RP Logo" class="soldier-img">
+            </a>
+        </div>
+        <div class="welcome">Добро пожаловать на вики-страницу проекта Javelin RP</div>
+        <div class="tabs">
+            <div class="tab active" data-tab="main" onclick="showTab('main')">ОСНОВНОЕ</div>
+            <div class="tab" onclick="window.open('https://www.donationalerts.com/r/javelinrp', '_blank')">
+                <a href="https://www.donationalerts.com/r/javelinrp" target="_blank">ДОНАТ</a>
+            </div>
+        </div>
+        <div id="wikiContent"></div>
+    </div>
+
+    <!-- Кнопка для открытия игры -->
+    <button class="game-button" onclick="openGameModal()">PONG</button>
+
+    <!-- Модальное окно с игрой PONG -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeGameModal()">×</span>
+            <h2>JAVELIN PONG</h2>
+            <p class="game-instructions">Управляйте платформой, двигая мышь или касаясь экрана</p>
+            <div id="score">Счет: 0</div>
+            <canvas id="pongCanvas" width="600" height="400"></canvas>
+            <p class="cheat-code">Введите секретный код для активации автоигры</p>
         </div>
     </div>
-    <div id="wikiContent"></div>
-</div>
 
-<!-- Кнопка для открытия игры -->
-<button class="game-button" onclick="openGameModal()">PONG</button>
-
-<!-- Модальное окно с игрой PONG -->
-<div id="gameModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button" onclick="closeGameModal()">×</span>
-        <h2>JAVELIN PONG</h2>
-        <p class="game-instructions">Управляйте платформой, двигая мышь или касаясь экрана</p>
-        <div id="score">Счет: 0</div>
-        <canvas id="pongCanvas" width="600" height="400"></canvas>
-        <p class="cheat-code">Введите секретный код для активации автоигры</p>
-    </div>
-</div>
-
-<script type="text/javascript">
-    // Содержимое вкладок
-    let currentTab = "main";
-    const tabContent = {
-        main: {
-            text: `<span class='highlight'>ОСНОВНАЯ ИНФОРМАЦИЯ</span>\n\n` +
-                  `Добро пожаловать на официальный сайт проекта Javelin RP.\n\n` +
-                  `<span class='highlight'>Текущий статус:</span> проект находится в активной разработке.\n\n` +
-                  `Вы можете поддержать развитие проекта через систему <span class='highlight'>донатов</span>.`
+    <script>
+        // Проверка на Великобританию
+        function checkUK() {
+            fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.country === 'GB') {
+                        document.getElementById('uk-warning').style.display = 'flex';
+                        document.body.classList.add('uk-detected');
+                    }
+                })
+                .catch(error => console.error('Error detecting country:', error));
         }
-    };
 
-    // Инициализация контента
-    function initContent() {
-        const wikiContent = document.getElementById("wikiContent");
-        wikiContent.innerHTML = tabContent[currentTab].text;
-        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-        document.querySelector(`.tab[data-tab="${currentTab}"]`).classList.add("active");
-    }
+        // Содержимое вкладок
+        let currentTab = "main";
+        const tabContent = {
+            main: {
+                text: `<span class='highlight'>ОСНОВНАЯ ИНФОРМАЦИЯ</span>\n\n` +
+                      `Добро пожаловать на официальный сайт проекта Javelin RP.\n\n` +
+                      `<span class='highlight'>Текущий статус:</span> проект находится в активной разработке.\n\n` +
+                      `Вы можете поддержать развитие проекта через систему <span class='highlight'>донатов</span>.`
+            }
+        };
 
-    // Переключение вкладок
-    function showTab(tabName) {
-        if (currentTab === tabName) return;
-        currentTab = tabName;
-        const wikiContent = document.getElementById("wikiContent");
-        
-        // Анимация исчезновения
-        wikiContent.style.opacity = '0';
-        wikiContent.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            wikiContent.innerHTML = tabContent[tabName].text;
-            // Анимация появления
-            wikiContent.style.opacity = '1';
-            wikiContent.style.transform = 'translateY(0)';
-            
+        // Инициализация контента
+        function initContent() {
+            const wikiContent = document.getElementById("wikiContent");
+            wikiContent.innerHTML = tabContent[currentTab].text;
             document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-            const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-            if (activeTab) activeTab.classList.add("active");
-        }, 300);
-    }
-
-    // Логика модального окна игры
-    function openGameModal() {
-        const modal = document.getElementById("gameModal");
-        modal.classList.add("show");
-        startPongGame();
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeGameModal() {
-        const modal = document.getElementById("gameModal");
-        modal.classList.remove("show");
-        setTimeout(() => {
-            modal.style.display = "none";
-        }, 300);
-        stopPongGame();
-        document.body.style.overflow = '';
-    }
-
-    // Логика игры PONG
-    let animationFrameId;
-    const canvas = document.getElementById("pongCanvas");
-    const ctx = canvas.getContext("2d");
-
-    // Игровые параметры
-    const paddleWidth = 100;
-    const paddleHeight = 12;
-    const paddleY = canvas.height - 30;
-    let paddleX = (canvas.width - paddleWidth) / 2;
-    const ballRadius = 10;
-    let ballX = canvas.width / 2;
-    let ballY = canvas.height / 2;
-    let ballSpeedX = 5;
-    let ballSpeedY = -5;
-    let score = 0;
-    let autoPlay = false;
-    const cheatCodeTarget = "909322";
-    let cheatCode = "";
-    let ballPulse = false;
-    let ballFlash = false;
-    let paddleFlash = false;
-    let gameStarted = false;
-
-    // Обработка ввода чит-кода
-    document.addEventListener("keydown", (e) => {
-        if (e.key >= "0" && e.key <= "9") {
-            cheatCode += e.key;
-            if (cheatCode.length > cheatCodeTarget.length) {
-                cheatCode = cheatCode.slice(-cheatCodeTarget.length);
-            }
-            if (cheatCode === cheatCodeTarget) {
-                autoPlay = !autoPlay;
-                cheatCode = "";
-            }
-        }
-    });
-
-    // Обработка движения мыши
-    function mouseMoveHandler(e) {
-        if (!autoPlay) {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            paddleX = mouseX - paddleWidth / 2;
-            if (paddleX < 0) paddleX = 0;
-            if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
-        }
-    }
-
-    // Обработка касания на мобильных устройствах
-    function touchMoveHandler(e) {
-        if (!autoPlay) {
-            e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const touchX = e.touches[0].clientX - rect.left;
-            paddleX = touchX - paddleWidth / 2;
-            if (paddleX < 0) paddleX = 0;
-            if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
-        }
-    }
-
-    function drawPaddle() {
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#ffffff";
-        if (paddleFlash) {
-            ctx.shadowColor = "rgba(76, 175, 80, 0.8)";
-            ctx.shadowBlur = 20;
-        } else {
-            ctx.shadowColor = "transparent";
-            ctx.shadowBlur = 0;
-        }
-        ctx.fill();
-        ctx.closePath();
-        ctx.restore();
-    }
-
-    function drawBall() {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        if (ballFlash) {
-            ctx.shadowColor = "rgba(255, 255, 255, 0.8)";
-            ctx.shadowBlur = 20;
-        }
-        if (ballPulse) {
-            ctx.globalAlpha = 0.8;
-        }
-        ctx.fill();
-        ctx.closePath();
-        ctx.restore();
-    }
-
-    function moveBall() {
-        ballX += ballSpeedX;
-        ballY += ballSpeedY;
-
-        // Столкновение с боковыми стенами
-        if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
-            ballSpeedX = -ballSpeedX;
-            ballFlash = true;
-            setTimeout(() => ballFlash = false, 200);
+            document.querySelector(`.tab[data-tab="${currentTab}"]`).classList.add("active");
         }
 
-        // Столкновение с верхней стеной
-        if (ballY - ballRadius < 0) {
-            ballSpeedY = -ballSpeedY;
-            ballFlash = true;
-            setTimeout(() => ballFlash = false, 200);
-        }
-
-        // Столкновение с платформой
-        if (
-            ballY + ballRadius > paddleY &&
-            ballX > paddleX &&
-            ballX < paddleX + paddleWidth
-        ) {
-            ballSpeedY = -ballSpeedY;
-            score++;
-            document.getElementById("score").textContent = `Счет: ${score}`;
-            document.getElementById("score").classList.add("animate");
-            setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
-            ballFlash = true;
-            paddleFlash = true;
+        // Переключение вкладок
+        function showTab(tabName) {
+            if (currentTab === tabName) return;
+            currentTab = tabName;
+            const wikiContent = document.getElementById("wikiContent");
+            
+            // Анимация исчезновения
+            wikiContent.style.opacity = '0';
+            wikiContent.style.transform = 'translateY(20px)';
+            
             setTimeout(() => {
+                wikiContent.innerHTML = tabContent[tabName].text;
+                // Анимация появления
+                wikiContent.style.opacity = '1';
+                wikiContent.style.transform = 'translateY(0)';
+                
+                document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+                const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+                if (activeTab) activeTab.classList.add("active");
+            }, 300);
+        }
+
+        // Логика модального окна игры
+        function openGameModal() {
+            const modal = document.getElementById("gameModal");
+            modal.classList.add("show");
+            startPongGame();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeGameModal() {
+            const modal = document.getElementById("gameModal");
+            modal.classList.remove("show");
+            setTimeout(() => {
+                modal.style.display = "none";
+            }, 300);
+            stopPongGame();
+            document.body.style.overflow = '';
+        }
+
+        // Логика игры PONG
+        let animationFrameId;
+        const canvas = document.getElementById("pongCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Игровые параметры
+        const paddleWidth = 100;
+        const paddleHeight = 12;
+        const paddleY = canvas.height - 30;
+        let paddleX = (canvas.width - paddleWidth) / 2;
+        const ballRadius = 10;
+        let ballX = canvas.width / 2;
+        let ballY = canvas.height / 2;
+        let ballSpeedX = 5;
+        let ballSpeedY = -5;
+        let score = 0;
+        let autoPlay = false;
+        const cheatCodeTarget = "909322";
+        let cheatCode = "";
+        let ballPulse = false;
+        let ballFlash = false;
+        let paddleFlash = false;
+        let gameStarted = false;
+
+        // Обработка ввода чит-кода
+        document.addEventListener("keydown", (e) => {
+            if (e.key >= "0" && e.key <= "9") {
+                cheatCode += e.key;
+                if (cheatCode.length > cheatCodeTarget.length) {
+                    cheatCode = cheatCode.slice(-cheatCodeTarget.length);
+                }
+                if (cheatCode === cheatCodeTarget) {
+                    autoPlay = !autoPlay;
+                    cheatCode = "";
+                }
+            }
+        });
+
+        // Обработка движения мыши
+        function mouseMoveHandler(e) {
+            if (!autoPlay) {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                paddleX = mouseX - paddleWidth / 2;
+                if (paddleX < 0) paddleX = 0;
+                if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+            }
+        }
+
+        // Обработка касания на мобильных устройствах
+        function touchMoveHandler(e) {
+            if (!autoPlay) {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const touchX = e.touches[0].clientX - rect.left;
+                paddleX = touchX - paddleWidth / 2;
+                if (paddleX < 0) paddleX = 0;
+                if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+            }
+        }
+
+        function drawPaddle() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(paddleX, paddleY, paddleWidth, paddleHeight);
+            ctx.fillStyle = "#ffffff";
+            if (paddleFlash) {
+                ctx.shadowColor = "rgba(76, 175, 80, 0.8)";
+                ctx.shadowBlur = 20;
+            } else {
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
+            }
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
+        }
+
+        function drawBall() {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff";
+            if (ballFlash) {
+                ctx.shadowColor = "rgba(255, 255, 255, 0.8)";
+                ctx.shadowBlur = 20;
+            }
+            if (ballPulse) {
+                ctx.globalAlpha = 0.8;
+            }
+            ctx.fill();
+            ctx.closePath();
+            ctx.restore();
+        }
+
+        function moveBall() {
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+
+            // Столкновение с боковыми стенами
+            if (ballX + ballRadius > canvas.width || ballX - ballRadius < 0) {
+                ballSpeedX = -ballSpeedX;
+                ballFlash = true;
+                setTimeout(() => ballFlash = false, 200);
+            }
+
+            // Столкновение с верхней стеной
+            if (ballY - ballRadius < 0) {
+                ballSpeedY = -ballSpeedY;
+                ballFlash = true;
+                setTimeout(() => ballFlash = false, 200);
+            }
+
+            // Столкновение с платформой
+            if (
+                ballY + ballRadius > paddleY &&
+                ballX > paddleX &&
+                ballX < paddleX + paddleWidth
+            ) {
+                ballSpeedY = -ballSpeedY;
+                score++;
+                document.getElementById("score").textContent = `Счет: ${score}`;
+                document.getElementById("score").classList.add("animate");
+                setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
+                ballFlash = true;
+                paddleFlash = true;
+                setTimeout(() => {
+                    ballFlash = false;
+                    paddleFlash = false;
+                }, 200);
+            }
+
+            // Мяч упал ниже платформы
+            if (ballY + ballRadius > canvas.height) {
+                ballX = canvas.width / 2;
+                ballY = canvas.height / 2;
+                ballSpeedX = 5;
+                ballSpeedY = -5;
+                paddleX = (canvas.width - paddleWidth) / 2;
+                score = 0;
+                document.getElementById("score").textContent = `Счет: ${score}`;
+                document.getElementById("score").classList.add("animate");
+                setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
+            }
+
+            // Автоигра: платформа следует за мячом
+            if (autoPlay) {
+                paddleX = ballX - paddleWidth / 2;
+                if (paddleX < 0) paddleX = 0;
+                if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
+            }
+
+            // Пульсация мяча
+            ballPulse = !ballPulse;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPaddle();
+            drawBall();
+            moveBall();
+            animationFrameId = requestAnimationFrame(draw);
+        }
+
+        function startPongGame() {
+            if (!animationFrameId) {
+                score = 0;
+                document.getElementById("score").textContent = `Счет: ${score}`;
+                canvas.addEventListener("mousemove", mouseMoveHandler);
+                canvas.addEventListener("touchmove", touchMoveHandler, { passive: false });
+                draw();
+            }
+        }
+
+        function stopPongGame() {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                animationFrameId = null;
+                ballX = canvas.width / 2;
+                ballY = canvas.height / 2;
+                paddleX = (canvas.width - paddleWidth) / 2;
+                score = 0;
+                document.getElementById("score").textContent = `Счет: ${score}`;
+                autoPlay = false;
+                cheatCode = "";
+                ballPulse = false;
                 ballFlash = false;
                 paddleFlash = false;
-            }, 200);
+                canvas.removeEventListener("mousemove", mouseMoveHandler);
+                canvas.removeEventListener("touchmove", touchMoveHandler);
+            }
         }
 
-        // Мяч упал ниже платформы
-        if (ballY + ballRadius > canvas.height) {
-            ballX = canvas.width / 2;
-            ballY = canvas.height / 2;
-            ballSpeedX = 5;
-            ballSpeedY = -5;
-            paddleX = (canvas.width - paddleWidth) / 2;
-            score = 0;
-            document.getElementById("score").textContent = `Счет: ${score}`;
-            document.getElementById("score").classList.add("animate");
-            setTimeout(() => document.getElementById("score").classList.remove("animate"), 200);
-        }
+        // Закрытие модального окна при клике вне контента
+        window.onclick = function(event) {
+            if (event.target === document.getElementById("gameModal")) {
+                closeGameModal();
+            }
+        };
 
-        // Автоигра: платформа следует за мячом
-        if (autoPlay) {
-            paddleX = ballX - paddleWidth / 2;
-            if (paddleX < 0) paddleX = 0;
-            if (paddleX > canvas.width - paddleWidth) paddleX = canvas.width - paddleWidth;
-        }
-
-        // Пульсация мяча
-        ballPulse = !ballPulse;
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawPaddle();
-        drawBall();
-        moveBall();
-        animationFrameId = requestAnimationFrame(draw);
-    }
-
-    function startPongGame() {
-        if (!animationFrameId) {
-            score = 0;
-            document.getElementById("score").textContent = `Счет: ${score}`;
-            canvas.addEventListener("mousemove", mouseMoveHandler);
-            canvas.addEventListener("touchmove", touchMoveHandler);
-            draw();
-        }
-    }
-
-    function stopPongGame() {
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            animationFrameId = null;
-            ballX = canvas.width / 2;
-            ballY = canvas.height / 2;
-            paddleX = (canvas.width - paddleWidth) / 2;
-            score = 0;
-            document.getElementById("score").textContent = `Счет: ${score}`;
-            autoPlay = false;
-            cheatCode = "";
-            ballPulse = false;
-            ballFlash = false;
-            paddleFlash = false;
-            canvas.removeEventListener("mousemove", mouseMoveHandler);
-            canvas.removeEventListener("touchmove", touchMoveHandler);
-        }
-    }
-
-    // Закрытие модального окна при клике вне контента
-    window.onclick = function(event) {
-        if (event.target === document.getElementById("gameModal")) {
-            closeGameModal();
-        }
-    };
-
-    // Инициализация при загрузке
-    document.addEventListener('DOMContentLoaded', initContent);
-</script>
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            initContent();
+            checkUK(); // Проверяем страну при загрузке
+        });
+    </script>
 </body>
 </html>

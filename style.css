@@ -1,0 +1,395 @@
+:root {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --highlight-color: #4CAF50;
+    --accent-color: #ffffff;
+    --container-bg: #1E1E1E;
+    --tab-bg: #333333;
+    --tab-hover: #4CAF50;
+    --tab-active: #ffffff;
+    --tab-text: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --glow-color: rgba(76, 175, 80, 0.7);
+}
+
+/* Стили для UK предупреждения */
+#uk-warning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#uk-warning img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
+}
+
+.warning-text {
+    font-size: 1.3em;
+    margin: 10px 0;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+.warning-text:first-of-type {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+.warning-text:last-of-type {
+    color: #f8a5a5;
+    font-style: italic;
+}
+
+body.uk-detected {
+    overflow: hidden;
+}
+
+/* Остальные стили */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: var(--container-bg);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+h1 {
+    font-size: 3em;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(90deg, var(--highlight-color), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 10px var(--glow-color);
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--highlight-color), var(--accent-color));
+    border-radius: 2px;
+}
+
+.soldier-img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px var(--glow-color));
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.soldier-img:hover {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.welcome {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+    color: #cccccc;
+    font-style: italic;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border-left: 3px solid var(--highlight-color);
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.tab {
+    flex: 1 1 auto;
+    min-width: 150px;
+    padding: 15px 20px;
+    text-align: center;
+    background-color: var(--tab-bg);
+    color: var(--tab-text);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.tab:hover {
+    background-color: var(--tab-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.tab:hover::before {
+    left: 100%;
+}
+
+.tab.active {
+    background-color: var(--tab-active);
+    color: #121212;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px var(--shadow-color);
+}
+
+.tab a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#wikiContent {
+    line-height: 1.8;
+    font-size: 1.1em;
+    white-space: pre-line;
+    min-height: 300px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent-color);
+}
+
+#wikiContent span.highlight {
+    color: var(--highlight-color);
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--glow-color);
+}
+
+.game-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--highlight-color), var(--accent-color));
+    border-radius: 50%;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 6px 15px var(--shadow-color);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse 2s infinite;
+}
+
+.game-button:hover {
+    transform: scale(1.1) rotate(10deg);
+    box-shadow: 0 8px 20px var(--shadow-color);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--container-bg);
+    padding: 30px;
+    border-radius: 15px;
+    position: relative;
+    max-width: 700px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s ease;
+    border: 1px solid var(--highlight-color);
+    box-shadow: 0 0 30px var(--glow-color);
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover {
+    color: var(--accent-color);
+}
+
+#pongCanvas {
+    background-color: #000000;
+    border: 2px solid var(--highlight-color);
+    display: block;
+    margin: 20px auto;
+    box-shadow: 0 0 20px var(--glow-color);
+}
+
+#score {
+    font-size: 1.5em;
+    color: var(--text-color);
+    margin-bottom: 15px;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px var(--glow-color);
+}
+
+#score.animate {
+    transform: scale(1.2);
+    color: var(--highlight-color);
+}
+
+.game-instructions {
+    margin-bottom: 20px;
+    color: #cccccc;
+    font-size: 0.9em;
+}
+
+.cheat-code {
+    margin-top: 15px;
+    font-size: 0.8em;
+    color: #777;
+    font-style: italic;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    h1 {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+    
+    .soldier-img {
+        width: 100px;
+        margin-top: 15px;
+    }
+    
+    .tab {
+        min-width: 120px;
+        padding: 12px 15px;
+        font-size: 0.9em;
+    }
+    
+    .game-button {
+        width: 50px;
+        height: 50px;
+        font-size: 14px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    #pongCanvas {
+        width: 100%;
+        height: auto;
+    }
+
+    #uk-warning img {
+        width: 80px;
+    }
+
+    .warning-text {
+        font-size: 1em;
+        padding: 0 15px;
+    }
+}
